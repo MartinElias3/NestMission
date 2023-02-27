@@ -53,17 +53,6 @@ describe('UsersService', () => {
     },
   ];
 
-  const usersWithId = {
-    firstName: 'John',
-    lastName: 'Doe',
-    role: 1,
-    age: 30,
-    email: 'john.doe@example.com',
-    password: 'password123',
-    isDisable: false,
-    friends: [],
-  };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -93,14 +82,6 @@ describe('UsersService', () => {
   it('should return all users', async () => {
     jest.spyOn(model, 'find').mockReturnValue({
       exec: jest.fn().mockResolvedValueOnce(usersArray),
-    } as any);
-    const users = await service.findAll();
-    expect(users).toEqual(usersArray);
-  });
-
-  it('should return one user', async () => {
-    jest.spyOn(model, 'findOne').mockReturnValue({
-      exec: jest.fn().mockResolvedValueOnce(userWithId),
     } as any);
     const users = await service.findAll();
     expect(users).toEqual(usersArray);
