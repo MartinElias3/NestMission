@@ -1,16 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IUser } from './user.interface';
 import { CreateUserDto } from './dto/createUserDto';
 import { UpdateUserDto } from './dto/updateUserDto';
 import { User, UserDocument } from './users.schema';
-import { SenderNotFoundException } from './exceptions/sender.notfound.exception';
-import { ReceiverNotFoundException } from './exceptions/receiver.notfound.exception';
-import { UserAlreadyFriendException } from './exceptions/user.already.friend.exception';
-import { UserNotFriendException } from './exceptions/user.not.friend.exception';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -75,43 +67,5 @@ export class UsersService {
     await user.save();
 
     return user;
-  }
-
-  async addFriend(idSender: string, idFriendToAdd: string): Promise<any> {
-    const userSender = await this.userModel.findById(idSender).exec();
-    if (userSender === null) {
-      throw new SenderNotFoundException();
-    }
-    const userToAdd = await this.userModel.findById(idFriendToAdd).exec();
-    if (userToAdd === null) {
-      throw new ReceiverNotFoundException();
-    }
-    if (userSender.friends.includes(userToAdd.id)) {
-      throw new UserAlreadyFriendException();
-    }
-    userSender.friends.push(userToAdd);
-    await userSender.save();
-
-    return userSender;
-  }
-
-  async deleteFriend(idSender: string, idFriendToDelete: string): Promise<any> {
-    const userSender = await this.userModel.findById(idSender).exec();
-    if (userSender === null) {
-      throw new SenderNotFoundException();
-    }
-    const userToDelete = await this.userModel.findById(idFriendToDelete).exec();
-    if (userToDelete === null) {
-      throw new ReceiverNotFoundException();
-    }
-    if (!userSender.friends.includes(userToDelete.id)) {
-      throw new UserNotFriendException();
-    }
-    const userToDeletePosition = userSender.friends.indexOf(userToDelete);
-
-    userSender.friends.splice(userToDeletePosition);
-    await userSender.save();
-
-    return userSender;
   }
 }

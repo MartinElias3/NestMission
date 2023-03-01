@@ -1,10 +1,10 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/user.module';
-import { UsersController } from './users/user.controller';
-import { UsersService } from './users/user.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 import { APP_PIPE } from '@nestjs/core';
+import { FriendRequestModule } from './friendrequest/friendrequest.module';
 @Module({
   providers: [
     {
@@ -13,10 +13,12 @@ import { APP_PIPE } from '@nestjs/core';
     },
   ],
   imports: [
+    EventEmitterModule.forRoot(),
     MongooseModule.forRoot(
       'mongodb+srv://martin:martinmartin@cluster0.9ef1j8k.mongodb.net/?retryWrites=true&w=majority',
     ),
     UsersModule,
+    FriendRequestModule,
   ],
 })
 export class AppModule {}
