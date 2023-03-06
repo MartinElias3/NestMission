@@ -70,6 +70,7 @@ export class ActivityService {
 
     return activity;
   }
+
   async findAllActivitiesByCompanies(companyId: string): Promise<IActivity[]> {
     const company = this.companyModel.findById(companyId);
     if (company === null) {
@@ -86,4 +87,5 @@ export class ActivityService {
     }
     return activities;
   }
+
 }
