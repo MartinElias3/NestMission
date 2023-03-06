@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FriendRequest, FriendRequestDocument } from './friendrequest.schema';
@@ -117,12 +121,18 @@ export class FriendRequestService {
     if (receiver === null) {
       throw new ReceiverNotFoundException();
     }
+    if (sender.friends.includes(receiver.id)) {
+      throw new UserAlreadyFriendException();
+    }
     if (friendRequestToHandle.hasBeenAccepted) {
       const friendAcceptedEvent = new FriendAcceptedEvent();
       friendAcceptedEvent.receiver = receiver;
       friendAcceptedEvent.sender = sender;
 
       this.eventEmitter.emit('friend.accepted', friendAcceptedEvent);
+      friendRequest.hasBeenAccepted = true;
+      friendRequest.hasBeenSeen = true;
+      await friendRequest.save();
     }
     if (!friendRequestToHandle.hasBeenAccepted) {
       this.delete(friendRequestToHandle.id);

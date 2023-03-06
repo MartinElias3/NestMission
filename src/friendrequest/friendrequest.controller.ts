@@ -16,11 +16,9 @@ import { response } from 'express';
 import { FriendRequestService } from './friendrequest.service';
 import { IdDto } from './dto/IdDto';
 import { CreateFriendRequestDto } from './dto/createFriendRequestDto';
-import { addfriendDto } from './dto/addFriendDto';
 import { SenderNotFoundException } from './exceptions/sender.notfound.exception';
 import { ReceiverNotFoundException } from './exceptions/receiver.notfound.exception';
 import { UserAlreadyFriendException } from './exceptions/user.already.friend.exception';
-import { UserNotFriendException } from './exceptions/user.not.friend.exception';
 import { HandleFriendRequestDto } from './dto/handleFriendRequestDto';
 import { FriendRequestNotFoundException } from './exceptions/friendRequest.notfound.exception';
 
@@ -153,21 +151,45 @@ export class FriendRequestController {
           },
         );
       } else if (error instanceof UserAlreadyFriendException) {
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          message: 'We could not create the friend request',
+        });
+      } else {
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          message: 'We could not add the user',
+        });
+      }
+    }
+  }
+
+  @Delete(':id')
+  async remove(
+    @Res() response: any,
+    @Param(new ValidationPipe({ whitelist: true })) { id }: IdDto,
+  ) {
+    try {
+      await this.friendRequestService.delete(id);
+      return response.status(HttpStatus.OK).json({
+        status: HttpStatus.ACCEPTED,
+        message: 'Friend Request has been succesfully deleted',
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
         throw new HttpException(
           {
-            status: HttpStatus.BAD_REQUEST,
-            code: 'USER_ALREADY_FRIEND',
-            error: 'User receiver is already a friend',
-            message: 'User receiver is already a friend',
+            status: HttpStatus.NOT_FOUND,
+            code: 'FRIEND_REQUEST_NOT_FOUND',
+            error: 'Friend Request not found',
+            message: 'We could not found the friend request',
           },
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.NOT_FOUND,
           {
             cause: error,
           },
         );
       } else {
         return response.status(HttpStatus.BAD_REQUEST).json({
-          message: 'We could not add the user',
+          message: 'We could not retrieve the friend request',
         });
       }
     }
