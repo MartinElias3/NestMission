@@ -183,7 +183,6 @@ export class ActivityController {
       }
     }
   }
-
   @Get('company/:id')
   async findAllByCompanies(
     @Param(new ValidationPipe({ whitelist: true })) { id }: IdDto,
@@ -213,5 +212,4 @@ export class ActivityController {
       });
     }
   }
-
 }

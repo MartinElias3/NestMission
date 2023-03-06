@@ -18,7 +18,15 @@ export class ActivityService {
   ) {}
 
   async findAll(): Promise<IActivity[]> {
+
+    const activities = await this.activityModel
+      .find({
+        isDisable: false,
+      })
+      .exec();
+
     const activities = await this.activityModel.find().exec();
+
     if (activities === null) {
       throw new NotFoundException('activities not found');
     }
