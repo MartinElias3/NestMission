@@ -78,6 +78,7 @@ export class ActivityService {
     const activities = await this.activityModel
       .find({
         company: companyId,
+        'company.isDisable': false,
         isDisable: false,
       })
       .exec();
