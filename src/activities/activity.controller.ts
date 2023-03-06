@@ -183,4 +183,33 @@ export class ActivityController {
       }
     }
   }
+  @Get('company/:id')
+  async findAllByCompanies(
+    @Param(new ValidationPipe({ whitelist: true })) { id }: IdDto,
+  ) {
+    try {
+      const activities =
+        await this.activityService.findAllActivitiesByCompanies(id);
+      return activities;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            code: 'ACTIVITIES_NOT_FOUND',
+            error: 'Activities not found',
+            message: 'We could not found the activities or the company',
+          },
+          HttpStatus.NOT_FOUND,
+          {
+            cause: error,
+          },
+        );
+      }
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        code: 'BAD_REQUEST',
+        message: 'We could not retrieve the activities',
+      });
+    }
+  }
 }

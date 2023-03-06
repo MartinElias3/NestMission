@@ -70,4 +70,20 @@ export class ActivityService {
 
     return activity;
   }
+  async findAllActivitiesByCompanies(companyId: string): Promise<IActivity[]> {
+    const company = this.companyModel.findById(companyId);
+    if (company === null) {
+      throw new NotFoundException('company not found');
+    }
+    const activities = await this.activityModel
+      .find({
+        company: companyId,
+        isDisable: false,
+      })
+      .exec();
+    if (activities === null) {
+      throw new NotFoundException('activities not found');
+    }
+    return activities;
+  }
 }
