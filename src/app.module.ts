@@ -5,6 +5,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { APP_PIPE } from '@nestjs/core';
 import { FriendRequestModule } from './friendrequest/friendrequest.module';
+import { CompanyModule } from './companies/company.module';
+import { ActivityModule } from './activities/activity.module';
 @Module({
   providers: [
     {
@@ -19,6 +21,8 @@ import { FriendRequestModule } from './friendrequest/friendrequest.module';
     ),
     UsersModule,
     FriendRequestModule,
+    CompanyModule,
+    ActivityModule,
   ],
 })
 export class AppModule {}

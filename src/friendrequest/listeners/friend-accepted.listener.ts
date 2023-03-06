@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { FriendAcceptedEvent } from '../events/friend-accepted.event';
-import { UserAlreadyFriendException } from '../exceptions/user.already.friend.exception';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/users/users.schema';
 import { Model } from 'mongoose';
@@ -25,9 +24,6 @@ export class FriendAcceptedListener {
       throw new ReceiverNotFoundException();
     }
 
-    if (sender.friends.includes(receiver.id)) {
-      throw new UserAlreadyFriendException();
-    }
     sender.friends.push(receiver);
     receiver.friends.push(sender);
 
