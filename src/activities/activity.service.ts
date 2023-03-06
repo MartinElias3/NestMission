@@ -18,11 +18,15 @@ export class ActivityService {
   ) {}
 
   async findAll(): Promise<IActivity[]> {
+
     const activities = await this.activityModel
       .find({
         isDisable: false,
       })
       .exec();
+
+    const activities = await this.activityModel.find().exec();
+
     if (activities === null) {
       throw new NotFoundException('activities not found');
     }
@@ -74,6 +78,7 @@ export class ActivityService {
 
     return activity;
   }
+
   async findAllActivitiesByCompanies(companyId: string): Promise<IActivity[]> {
     const company = this.companyModel.findById(companyId);
     if (company === null) {
