@@ -18,7 +18,11 @@ export class CompanyService {
   ) {}
 
   async findAll(): Promise<ICompany[]> {
-    const companies = await this.companyModel.find().exec();
+    const companies = await this.companyModel
+      .find({
+        isDisable: false,
+      })
+      .exec();
     if (companies === null) {
       throw new NotFoundException('companies not found');
     }
