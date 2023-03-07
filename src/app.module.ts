@@ -7,6 +7,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { FriendRequestModule } from './friendrequest/friendrequest.module';
 import { CompanyModule } from './companies/company.module';
 import { ActivityModule } from './activities/activity.module';
+import { BookingModule } from './bookings/booking.module';
 @Module({
   providers: [
     {
@@ -23,6 +24,7 @@ import { ActivityModule } from './activities/activity.module';
     FriendRequestModule,
     CompanyModule,
     ActivityModule,
+    BookingModule,
   ],
 })
 export class AppModule {}
